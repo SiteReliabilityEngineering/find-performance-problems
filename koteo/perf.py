@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+#  Koldo Oteo Orellana (koldo.oteo@gmail.com)
+###
 import time
 import os, sys
 import psutil
@@ -13,6 +17,7 @@ def g_cpu():
 # the vmstat system command. We will query cpu, memory and swap,
 # performance data
 class Vmstat(object):
+    
     def __init__(self):
         ''' We create a list into a dict with the next data:
         r_col: 'r' column with number of processes waiting for run time
@@ -20,6 +25,7 @@ class Vmstat(object):
         sy_col: kernel cpu time ; st_col: Time stolen from a vmachine'''
         self.real_data = {'r_col': [], 'b_col': [], 'si_col': [], 'so_col': [], 'us_col': [], 'sy_col': [], 'st_col': []}
         self.cpusn = g_cpu()
+        
     def exec_vmstat(self):
         self.vm = subprocess.Popen(['vmstat', '-n', '2', '9'], shell=False, stdout=subprocess.PIPE).stdout
         try:
@@ -35,6 +41,7 @@ class Vmstat(object):
                 self.real_data['st_col'].append(int(elem[0][16])) # st_col
         except Exception as e:
             print ('{} ERROR!!!'.format(e))
+            
     def chk_procs_waiting(self):
         self.count_r = 0
         self.count_b = 0
@@ -51,6 +58,7 @@ class Vmstat(object):
                               have a cpu bottleneck or slow disks'''
             else:
                 return 'No processes waiting at this moment'
+            
     def chk_cpu_use(self):
         self.calc_cpuavg = sum(self.real_data['us_col'] + self.real_data['sy_col'] + self.real_data['st_col']) / self.lst_len-1
         if self.calc_cpuavg >= 80 and self.calc_cpuavg < 90:
@@ -60,6 +68,7 @@ class Vmstat(object):
         else:
             return "The CPU usage is below 80%"
         print ("The CPU Usage (us + sy + st) is: {}%".format(self.calc_cpuavg))
+        
     def chk_swapping(self):
         self.count_si = 0
         self.count_so = 0
@@ -74,4 +83,3 @@ class Vmstat(object):
                     return 'Check the swap, the server is swapping in'
             else:
                 return 'At this moment the server is not swapping in/out'
-
