@@ -62,11 +62,11 @@ class Vmstat(object):
     def chk_cpu_use(self):
         self.calc_cpuavg = sum(self.real_data['us_col'] + self.real_data['sy_col'] + self.real_data['st_col']) / (self.lst_len - 1)
         if self.calc_cpuavg >= 80 and self.calc_cpuavg < 90:
-            return "Look your CPU usage, it's high. CPU %s usage" % (self.calc_cpuavg)
+            return "Look your CPU usage, it's high. CPU usage: %.2f%%" % (self.calc_cpuavg)
         elif self.calc_cpuavg > 90:
-            return "Look your CPU usage, it's VERY high. CPU %s usage" % (self.calc_cpuavg)
+            return "Look your CPU usage, it's VERY high. CPU usage: %.2f%%" % (self.calc_cpuavg)
         else:
-            return "The CPU usage is below 80%. CPU %s usage" % (self.calc_cpuavg)
+            return "The CPU usage is below 80%%. CPU usage: %.2f%%" % (self.calc_cpuavg)
         
     def chk_swapping(self):
         self.count_si = 0
