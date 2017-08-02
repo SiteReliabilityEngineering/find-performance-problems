@@ -92,3 +92,34 @@ class Vmstat(object):
 # Print Message when you delete the Instance with del (instanceName)            
         def __del__(self):
         print("Instance of Class Vmstat,  Removed")
+
+########################################################################################################################
+# With this class we are going to create some methods, that query,
+# the vmstat system command. We will query cpu, memory and swap,
+# performance data
+class Iostat(object):
+    def __init__(self):
+        ''' We create a list into a dict with the next data:
+        r_col: 'r' 
+        si/so_col: swapped in/out, us_col: user cpu time
+        sy_col: kernel cpu time ; st_col: Time stolen from a vmachine'''
+        self.real_data = {'dev': [], 'r_col': [], 'w_col': [], 'rMB': [], 'wMB': [], 'avgqu-sz': [], 'util': []}
+        self.cpusn = g_cpu()
+
+# Execute iostat and save the data into a list inside a dictionary
+    def exec_iostat(self):
+        self.iost = subprocess.Popen(['iostat', '-ydxm', '2', '8'], shell=False, stdout=subprocess.PIPE).stdout
+        try:
+            self.iostat_lst = [[dat.split()] for dat in self.iost.read().splitlines() if (not dat.startswith(b'Linux'))
+                               if (not dat.startswith(b' r')) if (not dat.startswith(b'Device:')) if (dat != b'')]
+            self.lst_len = len(self.iostat_lst)
+            for elem in self.iostat_lst[0:self.lst_len + 1]:
+                self.real_data['dev'].append(elem[0][0].decode("utf-8")) # dev
+                self.real_data['r_col'].append(int(elem[0][3])) # r_col
+                self.real_data['w_col'].append(int(elem[0][4])) # w_col
+                self.real_data['rMB'].append(int(elem[0][5])) # rMB
+                self.real_data['wMB'].append(int(elem[0][6])) # wMB
+                self.real_data['avgqu-sz'].append(int(elem[0][8])) # avgqu-sz
+                self.real_data['util'].append(int(elem[0][13])) # util
+        except Exception as e:
+            print ('{} ERROR!!!'.format(e))
