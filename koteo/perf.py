@@ -60,7 +60,7 @@ class Vmstat(object):
                 return 'No processes waiting at this moment'
             
     def chk_cpu_use(self):
-        self.calc_cpuavg = sum(self.real_data['us_col'] + self.real_data['sy_col'] + self.real_data['st_col']) / self.lst_len-1
+        self.calc_cpuavg = sum(self.real_data['us_col'] + self.real_data['sy_col'] + self.real_data['st_col']) / (self.lst_len - 1)
         if self.calc_cpuavg >= 80 and self.calc_cpuavg < 90:
             return "Look your CPU usage, it's high. CPU %s usage" % (self.calc_cpuavg)
         elif self.calc_cpuavg > 90:
