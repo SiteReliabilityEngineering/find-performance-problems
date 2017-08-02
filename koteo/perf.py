@@ -30,7 +30,8 @@ class Vmstat(object):
     def exec_vmstat(self):
         self.vm = subprocess.Popen(['vmstat', '-n', '2', '9'], shell=False, stdout=subprocess.PIPE).stdout
         try:
-            self.vmstat_lst = [[elem.split()] for elem in self.vm.read().splitlines() if (not elem.startswith(b'procs')) if (not elem.startswith(b' r'))]
+            self.vmstat_lst = [[elem.split()] for elem in self.vm.read().splitlines() if (not elem.startswith(b'procs'))
+                               if (not elem.startswith(b' r'))]
             self.lst_len = len(self.vmstat_lst)
             for elem in self.vmstat_lst[1:self.lst_len + 1]:
                 self.real_data['r_col'].append(int(elem[0][0])) # r_col
@@ -63,7 +64,8 @@ class Vmstat(object):
             
 # Check if CPU usage is high.
     def chk_cpu_use(self):
-        self.calc_cpuavg = sum(self.real_data['us_col'] + self.real_data['sy_col'] + self.real_data['st_col']) / (self.lst_len - 1)
+        self.calc_cpuavg = sum(self.real_data['us_col'] + self.real_data['sy_col'] + self.real_data['st_col']) \
+                           / (self.lst_len - 1)
         if self.calc_cpuavg >= 80 and self.calc_cpuavg < 90:
             return "Look your CPU usage, it's high. CPU usage: %.2f%%" % (self.calc_cpuavg)
         elif self.calc_cpuavg > 90:
