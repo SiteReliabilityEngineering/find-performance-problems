@@ -25,7 +25,8 @@ class Vmstat(object):
         sy_col: kernel cpu time ; st_col: Time stolen from a vmachine'''
         self.real_data = {'r_col': [], 'b_col': [], 'si_col': [], 'so_col': [], 'us_col': [], 'sy_col': [], 'st_col': []}
         self.cpusn = g_cpu()
-        
+
+# Execute vmstat and save the data into a list inside a dictionary
     def exec_vmstat(self):
         self.vm = subprocess.Popen(['vmstat', '-n', '2', '9'], shell=False, stdout=subprocess.PIPE).stdout
         try:
@@ -41,7 +42,8 @@ class Vmstat(object):
                 self.real_data['st_col'].append(int(elem[0][16])) # st_col
         except Exception as e:
             print ('{} ERROR!!!'.format(e))
-            
+
+# Check if you have processes waiting. (CPU Bottleneck)  
     def chk_procs_waiting(self):
         self.count_r = 0
         self.count_b = 0
@@ -59,6 +61,7 @@ class Vmstat(object):
             else:
                 return 'No processes waiting at this moment'
             
+# Check if CPU usage is high.
     def chk_cpu_use(self):
         self.calc_cpuavg = sum(self.real_data['us_col'] + self.real_data['sy_col'] + self.real_data['st_col']) / (self.lst_len - 1)
         if self.calc_cpuavg >= 80 and self.calc_cpuavg < 90:
@@ -68,6 +71,7 @@ class Vmstat(object):
         else:
             return "The CPU usage is below 80%%. CPU usage: %.2f%%" % (self.calc_cpuavg)
         
+# Check if there's swapping in/out activity        
     def chk_swapping(self):
         self.count_si = 0
         self.count_so = 0
@@ -82,3 +86,7 @@ class Vmstat(object):
                     return 'Check the swap, the server is swapping in'
             else:
                 return 'At this moment the server is not swapping in/out'
+            
+# Print Message when you delete the Instance with del (instanceName)            
+        def __del__(self):
+        print("Instance of Class Vmstat,  Removed")
