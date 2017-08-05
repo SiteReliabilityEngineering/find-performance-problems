@@ -98,21 +98,58 @@ class Vmstat(object):
 # the vmstat system command. We will query cpu, memory and swap,
 # performance data
 class Iostat(object):
+    rpm72k = '75, 100' # max iops for a 7200 rpm disk
+    rpm10k = '125, 150' # max iops for 10k rpm disk
+    rpm15k = '175, 200' # max iops for 15k rpm disk
+    ssd = 1000 # max 1000's iops for SSD
+
     def __init__(self):
+
         self.cpusn = g_cpu()
-        IostatSchema = namedtuple('IostatSchema', 'Device rrqm wrqm r w rMB wMB avgrqsz avgqusz await r_await w_await '
-                                                  'svctm util')
+        IostatSchema = namedtuple('IostatSchema', 'Device rrqm wrqm r w rMB wMB avgrqsz avgqusz await r_await w_await svctm util')
+        self.TpsSchema = namedtuple('TpsSchema', 'Device tps avgqusz util')
+
 # Execute iostat and save the data into a list inside a dictionary
     def exec_iostat(self):
-        self.iost = subprocess.Popen(['iostat', '-ydxm', '2', '8'], shell=False, stdout=subprocess.PIPE).stdout
+
+        self.iost = subprocess.Popen(['iostat', '-ydxmN', '2', '8'], shell=False, stdout=subprocess.PIPE).stdout
         try:
-            self.iostat_lst = [dat.split() for dat in self.iost.read().splitlines() if (not dat.startswith(b'Linux'))
-                               if (not dat.startswith(b' r')) if (not dat.startswith(b'Device:')) if (dat != b'')]
+            self.iostat_lst = [dat.split() for dat in self.iost.read().splitlines() if (not dat.startswith(b'Linux')) if (not dat.startswith(b' r')) if
+                               (not dat.startswith(b'Device:')) if (dat != b'') if (not dat.startswith(b'fd0'))]
             self.lst_len = len(self.iostat_lst)
-            self.named_tup = tuple( IostatSchemas(*line) for line in self.iostat_lst[0:self.lst_len] )
+            self.iost_tup = tuple( IostatSchemas(*line) for line in self.iostat_lst[0:self.lst_len] )
         except Exception as e:
             print ('{} ERROR!!!'.format(e))
-    def chk_iops(self):
-        for line in self.named_tup:
-            print (float(line.r) + float(line.w))
 
+    def chk_tps(self):
+        self.tps_count = 0 # we count the times that tps are higher than 75
+        self.disk_tps = []
+
+        # We save device, tps/iops, avgqusz, util into a list
+        for line in self.iost_tup:
+            self.disk_tps.append([line.Device.decode("utf-8"), (float(line.r) + float(line.w)), float(line.avgqusz), float(line.util)])
+        # I create a namedtuple with self.disk_tps list
+        self.tps_tup = tuple( self.TpsSchema(*line) for line in self.disk_tps )
+
+        # It's difficult to know the disk rpms in a virtual machine, that's why I won't check it
+        for line in self.tps_tup:
+            if line.tps > 75:
+                self.tps_count +=1
+                if self.tps_count >= 3:
+                    print ("Check your TPS/IOPS of your disk with iostat! Your tps are higher than 75!!!\n")
+                    print ("----- TPS references, depending of disk type -----")
+                    print ("Max TPS for a 7.2k rpm disk is: {}".format(rpm72k))
+                    print ("Max TPS for a 10k rpm disk is: {}".format(rpm10k))
+                    print ("Max TPS for a 15k rpm disk is: {}".format(rpm15k))
+                    print ("Max TPS for a SSD disk is: {}".format(ssd))
+                    break
+        if self.tps_count < 3:
+            print ("I don't see too much TPS in your disk's, I think they are working well")
+
+    def print_tps(self):
+        print ("Your disks tps, avgqusz and util data")
+        for line in self.tps_tup:
+            if line.tps > 75:
+                print ("Disk: {} - TPS/IPS: {} - AVGQUSZ: {} - UTIL: {}".format(line.Device, line.tps, line.avgqusz, line.util))
+            else:
+                print ("Disk: {} - TPS/IPS: {} - AVGQUSZ: {} - UTIL: {}".format(line.Device, line.tps, line.avgqusz, line.util))
