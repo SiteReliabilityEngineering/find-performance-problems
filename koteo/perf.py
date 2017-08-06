@@ -6,6 +6,7 @@ import time
 import os, sys
 import psutil
 import subprocess
+from collections import namedtuple
 
 # Get number of CPUS
 def g_cpu():
@@ -91,7 +92,7 @@ class Vmstat(object):
             
 # Print Message when you delete the Instance with del (instanceName)            
         def __del__(self):
-        print("Instance of Class Vmstat,  Removed")
+            print ("Instance of Class Vmstat,  Removed")
 
 ########################################################################################################################
 # With this class we are going to create some methods, that query,
@@ -104,9 +105,8 @@ class Iostat(object):
     ssd = 1000 # max 1000's iops for SSD
 
     def __init__(self):
-
         self.cpusn = g_cpu()
-        IostatSchema = namedtuple('IostatSchema', 'Device rrqm wrqm r w rMB wMB avgrqsz avgqusz await r_await w_await svctm util')
+        self.IostatSchema = namedtuple('IostatSchema', 'Device rrqm wrqm r w rMB wMB avgrqsz avgqusz await r_await w_await svctm util')
         self.TpsSchema = namedtuple('TpsSchema', 'Device tps avgqusz util')
 
 # Execute iostat and save the data into a list inside a dictionary
@@ -117,38 +117,55 @@ class Iostat(object):
             self.iostat_lst = [dat.split() for dat in self.iost.read().splitlines() if (not dat.startswith(b'Linux')) if (not dat.startswith(b' r')) if
                                (not dat.startswith(b'Device:')) if (dat != b'') if (not dat.startswith(b'fd0'))]
             self.lst_len = len(self.iostat_lst)
-            self.iost_tup = tuple( IostatSchemas(*line) for line in self.iostat_lst[0:self.lst_len] )
+            self.iost_tup = tuple(self.IostatSchema(*line) for line in self.iostat_lst[0:self.lst_len] )
         except Exception as e:
             print ('{} ERROR!!!'.format(e))
 
-    def chk_tps(self):
-        self.tps_count = 0 # we count the times that tps are higher than 75
-        self.disk_tps = []
+    def format_iostat(self):
+        self.disk_tps_util = []
 
         # We save device, tps/iops, avgqusz, util into a list
         for line in self.iost_tup:
-            self.disk_tps.append([line.Device.decode("utf-8"), (float(line.r) + float(line.w)), float(line.avgqusz), float(line.util)])
+            self.disk_tps_util.append([line.Device.decode("utf-8"), (float(line.r) + float(line.w)), float(line.avgqusz), float(line.util)])
         # I create a namedtuple with self.disk_tps list
-        self.tps_tup = tuple( self.TpsSchema(*line) for line in self.disk_tps )
+        self.tps_util_tup = tuple( self.TpsSchema(*line) for line in self.disk_tps_util )
+
+    def chk_tps(self):
+        self.tps_count = 0 # we count the times that tps are higher than 75
 
         # It's difficult to know the disk rpms in a virtual machine, that's why I won't check it
-        for line in self.tps_tup:
+        for line in self.tps_util_tup:
             if line.tps > 75:
                 self.tps_count +=1
                 if self.tps_count >= 3:
                     print ("Check your TPS/IOPS of your disk with iostat! Your tps are higher than 75!!!\n")
                     print ("----- TPS references, depending of disk type -----")
-                    print ("Max TPS for a 7.2k rpm disk is: {}".format(rpm72k))
-                    print ("Max TPS for a 10k rpm disk is: {}".format(rpm10k))
-                    print ("Max TPS for a 15k rpm disk is: {}".format(rpm15k))
-                    print ("Max TPS for a SSD disk is: {}".format(ssd))
+                    print ("Max TPS for a 7.2k rpm disk is: {}".format(Iostat.rpm72k))
+                    print ("Max TPS for a 10k rpm disk is: {}".format(Iostat.rpm10k))
+                    print ("Max TPS for a 15k rpm disk is: {}".format(Iostat.rpm15k))
+                    print ("Max TPS for a SSD disk is: {}".format(Iostat.ssd))
                     break
         if self.tps_count < 3:
             print ("I don't see too much TPS in your disk's, I think they are working well")
 
-    def print_tps(self):
+
+    def chk_util(self):
+        self.util_count = 0 # we count the times that util is higher than 91
+
+        for line in self.tps_util_tup:
+            if line.util > 91:
+                self.util_count +=1
+                if self.util_count >= 3:
+                    print ("Check your %util of your disk with iostat! Your %util is higher than 91%!!!\n")
+                    print ("Depending on your disks configuration/type your util column could be high (SSD/RAID) accept higher")
+                    break
+        if self.tps_count < 3:
+            print ("I don't see very high %util in your disk's, I think they are working well")
+
+
+    def print_tps_util(self):
         print ("Your disks tps, avgqusz and util data")
-        for line in self.tps_tup:
+        for line in self.tps_util_tup:
             if line.tps > 75:
                 print ("Disk: {} - TPS/IPS: {} - AVGQUSZ: {} - UTIL: {}".format(line.Device, line.tps, line.avgqusz, line.util))
             else:
