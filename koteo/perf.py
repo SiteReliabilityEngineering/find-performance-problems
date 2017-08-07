@@ -170,3 +170,7 @@ class Iostat(object):
                 print ("Disk: {} - TPS/IPS: {} - AVGQUSZ: {} - UTIL: {}".format(line.Device, line.tps, line.avgqusz, line.util))
             else:
                 print ("Disk: {} - TPS/IPS: {} - AVGQUSZ: {} - UTIL: {}".format(line.Device, line.tps, line.avgqusz, line.util))
+
+# Print Message when you delete the Instance with del (instanceName)
+    def __del__(self):
+        print ("Instance of Class Iostat,  Removed")
