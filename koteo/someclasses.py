@@ -47,6 +47,20 @@ class SomePerf(object):
         except psutil.AccessDenied:
             print ("Login as root, or use sudo, to execute this Script!!!")
 
+    # Print LOAD AVERAGE information
+    def load_avg(self):
+        self.cpus_num = get_cpus()
+        self.load_av = os.getloadavg()[0]
+        print ("Last minute Load Average: {}".format(self.load_av))
+        if (self.load_av / self.cpus_num) <= 1:
+            print ("Your system Load Avg seams to be good, but try to check it in different periods of time (sar/top).")
+        else:
+            print ("Check the cpu usage and iowait, maybe you have a problem")
+
+class MainPerf(object):
+    def __init__(self):
+        pass
+
     # Print swap usage information
     def prt_swp(self):
         self.swp = psutil.swap_memory()
@@ -72,14 +86,3 @@ class SomePerf(object):
         self.avg_use_cpu = (sum(i for i in self.use_cpu) / self.len_use_cpu)
 
         print ("The CPU Average is: {} %".format(self.avg_use_cpu))
-
-    # Print LOAD AVERAGE information
-    def load_avg(self):
-        self.cpus_num = get_cpus()
-        self.load_av = os.getloadavg()[0]
-        print ("Last minute Load Average: {}".format(self.load_av))
-        if (self.load_av / self.cpus_num) <= 1:
-            print ("Your system Load Avg seams to be good, but try to check it in different periods of time (sar/top).")
-        else:
-
-    print ("Check the cpu usage and iowait, maybe you have a problem")
