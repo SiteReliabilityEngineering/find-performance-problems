@@ -57,6 +57,7 @@ class SomePerf(object):
         else:
             print ("Check the cpu usage and iowait, maybe you have a problem")
 
+# Class to use Main menu
 class MainPerf(object):
     def __init__(self):
         pass
@@ -72,9 +73,9 @@ class MainPerf(object):
     # Print memory usage information
     def prt_mem(self):
         self.memo = psutil.virtual_memory()
-        self.tot_mem = bytes_mb(memo.total)
-        self.us_mem = bytes_mb(memo.used)
-        self.cach_mem = bytes_mb(memo.cached)
+        self.tot_mem = bytes_to(self.memo.total)
+        self.us_mem = bytes_to(self.memo.used)
+        self.cach_mem = bytes_to(self.memo.cached)
 
         print ("Total Memory: {} - Used Memory: {}".format(self.tot_mem, self.us_mem))
         print ("Cached Memory: {}".format(self.cach_mem))
