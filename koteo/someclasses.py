@@ -65,8 +65,8 @@ class MainPerf(object):
     # Print swap usage information
     def prt_swp(self):
         self.swp = psutil.swap_memory()
-        self.tot_swp = bytes_to(swp.total)
-        self.us_swp = bytes_to(swp.used)
+        self.tot_swp = bytes_to(self.swp.total)
+        self.us_swp = bytes_to(self.swp.used)
 
         print ("Total SWAP: {} - Used SWAP: {}".format(self.tot_swp, self.us_swp))
 
