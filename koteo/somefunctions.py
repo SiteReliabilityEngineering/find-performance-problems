@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #  Koldo Oteo Orellana (koldo.oteo@gmail.com)
 ###
-
+import os
 ### Vars
 onemb = 1048576
 tenmb = 10485760
@@ -21,6 +21,8 @@ def bytes_to(bytes):
     elif bytes >= onegb:
         return ("{:.1f} Gb".format(bytes / 1024 / 1024 / 1024, '.2f'))
 
+# Get number of CPUS
 def get_cpus():
-    return psutil.cpu_count(logical=True)
-
+    cpusn = os.sysconf("SC_NPROCESSORS_ONLN")
+    if cpusn > 0:
+        return cpusn
