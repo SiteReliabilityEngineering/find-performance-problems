@@ -20,3 +20,7 @@ def bytes_to(bytes):
         return ("{:.1f} Mb".format(bytes / 1024 / 1024, '.2f'))
     elif bytes >= onegb:
         return ("{:.1f} Gb".format(bytes / 1024 / 1024 / 1024, '.2f'))
+
+def get_cpus():
+    return psutil.cpu_count(logical=True)
+
