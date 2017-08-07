@@ -166,7 +166,7 @@ class Iostat(object):
     def print_tps_util(self):
         print ("Your disks tps, avgqusz and util data")
         for line in self.tps_util_tup:
-            if line.tps > 75:
+            if line.tps > 75 or line.util > 91:
                 print ("Disk: {} - TPS/IPS: {} - AVGQUSZ: {} - UTIL: {}".format(line.Device, line.tps, line.avgqusz, line.util))
             else:
                 print ("Disk: {} - TPS/IPS: {} - AVGQUSZ: {} - UTIL: {}".format(line.Device, line.tps, line.avgqusz, line.util))
