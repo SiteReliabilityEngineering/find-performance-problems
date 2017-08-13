@@ -16,7 +16,7 @@ from koteo import Vmstat
 import os
 
 def cls():
-    os.system('cls')
+    os.system('clear')
 
 
 def menu():
