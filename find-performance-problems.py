@@ -8,7 +8,7 @@
 # usage           :./find-performance-problems
 # python_version  :3.x
 #=============================================================
-from koteo import __version__
+from koteo import __version__, __author__
 from koteo import Resources
 from koteo import SomePerf
 from koteo import Iostat
@@ -23,6 +23,7 @@ def menu():
     cls()
 
     print ("Welcome to Find Performance Problems Tool v{} for Linux and Python 3.x".format(__version__))
+    print ("Author: {}".format(__author__))
     print ("\tSelect an option: ")
     print ("\t\t1) I will show you a basic view of your resources (cpu/mem/swap) ")
     print ("\t\t2) All in one 'Deep analysis' Menu ")
@@ -43,3 +44,4 @@ def resources_menu():
 
 
 menu()
+resources_menu()
