@@ -167,7 +167,7 @@ class Iostat(object):
         for line in self.tps_util_tup:
             if line.tps > 75 or line.util > 91:
                 print ("Disk: {} - TPS/IPS: {} - AVGQUSZ: {} - UTIL: {}".format(line.Device, line.tps, line.avgqusz, line.util))
-            else:
+            elif line.tps > 10 and line.tps < 75:
                 print ("Disk: {} - TPS/IPS: {} - AVGQUSZ: {} - UTIL: {}".format(line.Device, line.tps, line.avgqusz, line.util))
 
 # Print Message when you delete the Instance with del (instanceName)
