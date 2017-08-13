@@ -89,8 +89,8 @@ class Vmstat(object):
                 return 'At this moment the server is not swapping in/out'
             
 # Print Message when you delete the Instance with del (instanceName)            
-        def __del__(self):
-            print ("Instance of Class Vmstat,  Removed")
+    def __del__(self):
+        print ("Instance of Class Vmstat,  Removed")
 
 ########################################################################################################################
 # With this class we are going to create some methods, that query,
