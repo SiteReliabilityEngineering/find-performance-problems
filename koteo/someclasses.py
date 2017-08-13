@@ -4,7 +4,7 @@
 import os, time, glob, re
 import psutil
 from .somefunctions import bytes_to
-from .somefunctions import get_cpus1T
+from .somefunctions import get_cpus
 
 class SomePerf(object):
 
