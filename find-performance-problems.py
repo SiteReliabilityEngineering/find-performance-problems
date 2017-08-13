@@ -28,10 +28,9 @@ def menu():
     print ("\t\t1) I will show you a basic view of your resources (cpu/mem/swap) ")
     print ("\t\t2) All in one 'Deep analysis' Menu ")
     print ("\t\t3) CPU Bottleneck Menu 'Deep analysis' Menu ")
-    print ("\t\t4) Memory 'Deep analysis' Menu")
-    print ("\t\t5) Swap 'Deep analysis' Menu")
-    print ("\t\t6) Disk 'Deep analysis' Menu")
-    print ("\t\t7) Exit ")
+    print ("\t\t4) Swap 'Deep analysis' Menu")
+    print ("\t\t5) IO 'Deep analysis' Menu")
+    print ("\t\t6) Exit ")
 
 
 def resources_menu():
@@ -41,6 +40,34 @@ def resources_menu():
     res.cpu_use()
     res.prt_mem()
     res.prt_swp()
+
+def all_in_one():
+    cls()
+
+    print ("*" * 15, "CPU analysis", "*" * 15)
+    vm = Vmstat()
+    io = Iostat()
+    vm.exec_vmstat()
+    vm.chk_cpu_use()
+    vm.chk_procs_waiting()
+    print ('\n')
+
+    print ("*" * 15, "Swap analysis", "*" * 15)
+    vm.chk_swapping()
+    vm.__del__()
+    print ('\n')
+
+    print ("*" * 15, "IO analysis", "*" * 15)
+    io.exec_iostat()
+    io.format_iostat()
+    io.chk_tps()
+    io.chk_util()
+    io.print_tps_util()
+    io.__del__()
+
+
+
+
 
 
 menu()
