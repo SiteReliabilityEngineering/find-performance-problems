@@ -68,6 +68,7 @@ def all_in_one():
     print ("*" * 15, "IO analysis", "*" * 15)
     print ('\n')
     io.exec_iostat()
+    print ('\n')
     io.format_iostat()
     print (io.chk_tps())
     print ('\n')
@@ -76,9 +77,12 @@ def all_in_one():
     print (io.print_tps_util())
     sp.d_state_proc()
     io.__del__()
+    print ('\n')
 
     print ("*" * 15, "OTHERS analysis", "*" * 15)
+    print ('\n')
     sp.files_open()
+    sp.__del()
 
 ##################################################
 
