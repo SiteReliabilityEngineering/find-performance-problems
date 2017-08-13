@@ -30,7 +30,8 @@ def menu():
     print ("\t\t3) CPU Bottleneck Menu 'Deep analysis' Menu ")
     print ("\t\t4) Swap 'Deep analysis' Menu")
     print ("\t\t5) IO 'Deep analysis' Menu")
-    print ("\t\t6) Exit ")
+    print ("\t\t6) Other 'Deep analysis' Menu")
+    print ("\t\t7) Exit ")
 
 
 def resources_menu():
@@ -40,7 +41,9 @@ def resources_menu():
     res.cpu_use()
     res.prt_mem()
     res.prt_swp()
+    res.__del__()
 
+##################################################
 def all_in_one():
     cls()
 
@@ -48,14 +51,18 @@ def all_in_one():
     print ('\n')
     vm = Vmstat()
     io = Iostat()
+    sp = SomePerf()
     vm.exec_vmstat()
     print(vm.chk_cpu_use())
+    print ('\n')
     print (vm.chk_procs_waiting())
     print ('\n')
+    sp.load_avg()
 
     print ("*" * 15, "Swap analysis", "*" * 15)
     print ('\n')
     print (vm.chk_swapping())
+    vm.__del__()_()
     print ('\n')
 
     print ("*" * 15, "IO analysis", "*" * 15)
@@ -63,10 +70,17 @@ def all_in_one():
     io.exec_iostat()
     io.format_iostat()
     print (io.chk_tps())
+    print ('\n')
     print(io.chk_util())
+    print ('\n')
     print (io.print_tps_util())
+    sp.d_state_proc()
+    io.__del__()
 
+    print ("*" * 15, "OTHERS analysis", "*" * 15)
+    sp.files_open()
 
+##################################################
 
 menu()
 resources_menu()
