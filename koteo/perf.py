@@ -2,9 +2,7 @@
 # -*- coding: utf-8 -*-
 #  Koldo Oteo Orellana (koldo.oteo@gmail.com)
 ###
-import time
 import os, sys
-import psutil
 import subprocess
 from collections import namedtuple
 
