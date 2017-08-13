@@ -45,6 +45,7 @@ def all_in_one():
     cls()
 
     print ("*" * 15, "CPU analysis", "*" * 15)
+    print ('\n')
     vm = Vmstat()
     io = Iostat()
     vm.exec_vmstat()
@@ -53,17 +54,17 @@ def all_in_one():
     print ('\n')
 
     print ("*" * 15, "Swap analysis", "*" * 15)
-    vm.chk_swapping()
-    vm.__del__()
+    print ('\n')
+    print (vm.chk_swapping())
     print ('\n')
 
     print ("*" * 15, "IO analysis", "*" * 15)
+    print ('\n')
     io.exec_iostat()
     io.format_iostat()
-    io.chk_tps()
-    io.chk_util()
-    io.print_tps_util()
-    io.__del__()
+    print (io.chk_tps())
+    print(io.chk_util())
+    print (io.print_tps_util())
 
 
 

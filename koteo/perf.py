@@ -159,6 +159,7 @@ class Iostat(object):
                     break
         if self.tps_count < 3:
             print ("I don't see very high %util in your disk's, I think they are working well")
+            print ('\n')
 
 
     def print_tps_util(self):
