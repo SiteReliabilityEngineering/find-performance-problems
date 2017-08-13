@@ -69,7 +69,7 @@ class Vmstat(object):
             return "Look your CPU usage, it's high. CPU usage: %.2f%%" % (self.calc_cpuavg)
         elif self.calc_cpuavg > 90:
             return "Look your CPU usage, it's VERY high. CPU usage: %.2f%%" % (self.calc_cpuavg)
-        else:
+        elif self.calc_cpuavg < 80:
             return "The CPU usage is below 80%%. CPU usage: %.2f%%" % (self.calc_cpuavg)
         
 # Check if there's swapping in/out activity        
@@ -162,7 +162,8 @@ class Iostat(object):
 
 
     def print_tps_util(self):
-        print ("Your disks tps, avgqusz and util data")
+        print ("Your disks TPS, AVGQUSZ and UTIL data:")
+        print ('\n')
         for line in self.tps_util_tup:
             if line.tps > 75 or line.util > 91:
                 print ("Disk: {} - TPS/IPS: {} - AVGQUSZ: {} - UTIL: {}".format(line.Device, line.tps, line.avgqusz, line.util))
