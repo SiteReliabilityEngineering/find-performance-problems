@@ -57,6 +57,9 @@ class SomePerf(object):
         else:
             print ("Check the cpu usage and iowait, maybe you have a problem")
 
+    def __del__(self):
+        print ("Instance of Class SomePerf,  Removed")
+
 # Class to use in Resources menu
 class Resources(object):
     def __init__(self):
@@ -87,3 +90,6 @@ class Resources(object):
         self.avg_use_cpu = (sum(i for i in self.use_cpu) / self.len_use_cpu)
 
         print ("The CPU Average is: {} %".format(self.avg_use_cpu))
+
+    def __del__(self):
+        print ("Instance of Class Resources,  Removed")
