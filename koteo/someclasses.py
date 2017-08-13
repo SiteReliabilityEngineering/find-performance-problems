@@ -4,7 +4,7 @@
 import os, time, glob, re
 import psutil
 from .somefunctions import bytes_to
-from .somefunctions import get_cpus
+from .somefunctions import get_cpus1T
 
 class SomePerf(object):
 
@@ -77,7 +77,7 @@ class Resources(object):
         self.us_mem = bytes_to(self.memo.used)
         self.cach_mem = bytes_to(self.memo.cached)
 
-        print ("Total Memory: {} - Used Memory: {}".format(self.tot_mem, self.us_mem))
+        print ("Total Memory: {} || Used Memory: {}".format(self.tot_mem, self.us_mem))
         print ("Cached Memory: {}".format(self.cach_mem))
 
     # Print CPU usage information
