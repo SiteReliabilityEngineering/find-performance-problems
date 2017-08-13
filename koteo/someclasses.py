@@ -3,8 +3,8 @@
 #  Koldo Oteo Orellana (koldo.oteo@gmail.com)
 import os, time, glob, re
 import psutil
-from somefunctions import bytes_to
-from somefunctions import get_cpus
+from .somefunctions import bytes_to
+from .somefunctions import get_cpus
 
 class SomePerf(object):
 
@@ -57,8 +57,8 @@ class SomePerf(object):
         else:
             print ("Check the cpu usage and iowait, maybe you have a problem")
 
-# Class to use Main menu
-class MainPerf(object):
+# Class to use in Resources menu
+class Resources(object):
     def __init__(self):
         pass
 
