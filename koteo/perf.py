@@ -144,7 +144,7 @@ class Iostat(object):
                     print ("Max TPS for a SSD disk is: {}".format(Iostat.ssd))
                     break
         if self.tps_count < 3:
-            print ("I don't see too much TPS in your disk's, I think they are working well")
+            return ("I don't see too much TPS in your disk's, I think they are working well")
 
 
     def chk_util(self):
@@ -154,12 +154,11 @@ class Iostat(object):
             if line.util > 91:
                 self.util_count +=1
                 if self.util_count >= 3:
-                    print ("Check your %util of your disk with iostat! Your %util is higher than 91%!!!\n")
                     print ("Depending on your disks configuration/type your util column could be high (SSD/RAID) accept higher")
-                    break
+                    return ("Check your %util of your disk with iostat! Your %util is higher than 91%!!!\n")
+
         if self.tps_count < 3:
-            print ("I don't see very high %util in your disk's, I think they are working well")
-            print ('\n')
+            return ("I don't see very high %util in your disk's, I think they are working well")
 
 
     def print_tps_util(self):
