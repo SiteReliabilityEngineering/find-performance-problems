@@ -1,4 +1,3 @@
-import os, time
 from perf import Vmstat
 from perf import Iostat
 import somefunctions
