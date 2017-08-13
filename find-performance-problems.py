@@ -62,7 +62,7 @@ def all_in_one():
     print ("*" * 15, "Swap analysis", "*" * 15)
     print ('\n')
     print (vm.chk_swapping())
-    vm.__del__()_()
+    vm.__del__()
     print ('\n')
 
     print ("*" * 15, "IO analysis", "*" * 15)
