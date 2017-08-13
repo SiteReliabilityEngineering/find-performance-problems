@@ -49,8 +49,8 @@ def all_in_one():
     vm = Vmstat()
     io = Iostat()
     vm.exec_vmstat()
-    vm.chk_cpu_use()
-    vm.chk_procs_waiting()
+    print(vm.chk_cpu_use())
+    print (vm.chk_procs_waiting())
     print ('\n')
 
     print ("*" * 15, "Swap analysis", "*" * 15)
@@ -68,8 +68,7 @@ def all_in_one():
 
 
 
-
-
-
 menu()
 resources_menu()
+all_in_one()
+
